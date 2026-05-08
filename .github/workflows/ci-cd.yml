@@ -62,6 +62,16 @@ jobs:
 
       - name: Build
         run: npm run build
+      - name: Debug secret presence
+        run: |
+          if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}" ]; then
+            echo "❌ Secret is EMPTY or NOT available"
+            exit 1
+          else
+            echo "✅ Secret is present"
+          fi
+
+
 
       # Example: Azure Web App deployment
       - name: Deploy to Azure Web App
