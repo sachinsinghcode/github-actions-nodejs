@@ -10,10 +10,10 @@ app.get('/', (req, res) => {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Sample Page</title>
+            <title>Sample Page of NodeJs</title>
         </head>
         <body>
-            <h1>This is a Sample Page</h1>
+            <h1>This is a Sample Page Deployed using Github Actions OIDC</h1>
         </body>
         </html>
     `);

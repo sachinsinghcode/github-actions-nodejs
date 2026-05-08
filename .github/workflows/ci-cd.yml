@@ -47,7 +47,11 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    environment: Azure   
+    environment: Azure  
+
+    permissions:
+      id-token: write 
+      contents: read 
 
     steps:
       - name: Checkout Code
@@ -63,24 +67,37 @@ jobs:
 
       - name: Build
         run: npm run build
-      - name: Debug secret presence
-        run: |
-          if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}" ]; then
-            echo "❌ Secret is EMPTY or NOT available"
-            exit 1
-          else
-            echo "✅ Secret is present"
-          fi
 
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-
-      # Example: Azure Web App deployment
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
+      
+        
+      # - name: Debug secret presence
+      #   run: |
+      #     if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}" ]; then
+      #       echo "❌ Secret is EMPTY or NOT available"
+      #       exit 1
+      #     else
+      #       echo "✅ Secret is present"
+      #     fi
+
+      # # Example: Azure Web App deployment
+      # - name: Deploy to Azure Web App
+      #   uses: azure/webapps-deploy@v3
+      #   with:
+      #     app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+      #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      #     package: .
 
 
   # -------------------------
