@@ -47,6 +47,7 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    environment: Azure   
 
     steps:
       - name: Checkout Code
